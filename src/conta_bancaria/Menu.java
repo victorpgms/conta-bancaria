@@ -14,7 +14,7 @@ public class Menu {
 		int op = 0;
 		
 		Conta c1 = new Conta(1, 123, 1, "Isabella", 200000.00f);
-		Conta c2 = new Conta(1, 123, 1, "Victor", 200000.00f);
+		Conta c2 = new Conta(2, 123, 1, "Victor", 200000.00f);
 		
 		c1.visualizar();
 		
