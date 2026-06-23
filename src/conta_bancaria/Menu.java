@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import conta_bancaria.model.Conta;
 import conta_bancaria.model.ContaCorrente;
+import conta_bancaria.model.ContaPoupanca;
 import conta_bancaria.util.*;
 
 public class Menu {
@@ -40,12 +41,17 @@ public class Menu {
 		cc1.visualizar();
 		
 		
-		System.out.println("%nSacar R$ 22.000,00 da conta cc1 " + (cc1.sacar(22000) ? "Saque efetuado com sucesso | Saldo: " + cc1.getSaldo() : "Saldo insuficiente"));
+		System.out.println("\nSacar R$ 22.000,00 da conta cc1 " + (cc1.sacar(22000.00f) ? "Saque efetuado com sucesso | Saldo: " + cc1.getSaldo() : "Saldo insuficiente"));
 		
 		cc1.depositar(2000.00f);
 		cc1.visualizar();
 		
 		
+		ContaPoupanca cp1 = new ContaPoupanca(4, 456, 2, "Victor Poupança", 3000.00f, 13);
+		cp1.visualizar();
+		
+		System.out.println("\nSacar R$ 2.000,00 da conta cp1 " + (cp1.sacar(2000.00f) ? "Saque efetuado com sucesso | Saldo: " + cp1.getSaldo() : "Saldo insuficiente"));
+		cp1.visualizar();
 		
 		do {
 			System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND);
