@@ -3,6 +3,7 @@ package conta_bancaria;
 import java.util.Scanner;
 
 import conta_bancaria.model.Conta;
+import conta_bancaria.model.ContaCorrente;
 import conta_bancaria.util.*;
 
 public class Menu {
@@ -13,6 +14,7 @@ public class Menu {
 		
 		int op = 0;
 		
+		/*
 		Conta c1 = new Conta(1, 123, 1, "Isabella", 200000.00f);
 		Conta c2 = new Conta(2, 123, 1, "Victor", 200000.00f);
 		
@@ -29,6 +31,20 @@ public class Menu {
 		c2.visualizar();
 
 		System.out.println(c1.getTitular());
+		*/
+		
+		//INSTANCIAR OBJETOS CONTAS CORRENTE
+		
+		ContaCorrente cc1 = new ContaCorrente (3,789, 1, "Victor Corrente", 20000.00f, 2000.00f);
+		
+		cc1.visualizar();
+		
+		
+		System.out.println("%nSacar R$ 22.000,00 da conta cc1 " + (cc1.sacar(22000) ? "Saque efetuado com sucesso | Saldo: " + cc1.getSaldo() : "Saldo insuficiente"));
+		
+		cc1.depositar(2000.00f);
+		cc1.visualizar();
+		
 		
 		
 		do {
