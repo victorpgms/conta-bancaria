@@ -1,9 +1,11 @@
 package conta_bancaria;
 
 import java.util.InputMismatchException;
+import java.util.Optional;
 import java.util.Scanner;
 
 import conta_bancaria.controller.ContaController;
+import conta_bancaria.model.Conta;
 import conta_bancaria.model.ContaCorrente;
 import conta_bancaria.model.ContaPoupanca;
 import conta_bancaria.util.Cores;
@@ -15,9 +17,8 @@ public class Menu {
 
 	public static void main(String[] args) {
 
-
 		int op = 0;
-		
+
 		// Criar dados de teste
 		criarContasTeste();
 
@@ -41,17 +42,17 @@ public class Menu {
 			System.out.println("*************************************");
 			System.out.println("                                     ");
 			System.out.println("Entre com a opção desejada:          " + Cores.TEXT_RESET);
-			
+
 			try {
-				
-			op = teclado.nextInt();
-			teclado.nextLine();
+
+				op = teclado.nextInt();
+				teclado.nextLine();
 			} catch (InputMismatchException e) {
 				op = -1;
 				System.out.println("\n digite um número inteiro entre 0 e 8");
 				teclado.nextLine();
 			}
-			
+
 			switch (op) {
 			case 1: {
 				System.out.println("*************************************");
@@ -77,6 +78,7 @@ public class Menu {
 				System.out.println("*************************************");
 				System.out.println("BUSCAR CONTA POR NÚMERO");
 				System.out.println("*************************************");
+				procurarContaPorNumero();
 				keyPress();
 
 				break;
@@ -86,6 +88,7 @@ public class Menu {
 				System.out.println("*************************************");
 				System.out.println("ATUALIZAR DADOS DA CONTA");
 				System.out.println("*************************************");
+				atualizarConta();
 				keyPress();
 
 				break;
@@ -95,6 +98,7 @@ public class Menu {
 				System.out.println("*************************************");
 				System.out.println("APAGAR CONTA");
 				System.out.println("*************************************");
+				deletarConta();
 				keyPress();
 
 				break;
@@ -205,5 +209,115 @@ public class Menu {
 		}
 
 	}
+
+	public static void procurarContaPorNumero() {
+		System.out.println("Digite o número da conta: ");
+		int numero = teclado.nextInt();
+		teclado.nextLine();
+
+		contaController.procurarPorNumero(numero);
+	}
+
+	public static void deletarConta() {
+		System.out.println("Digite o número da conta: ");
+		int numero = teclado.nextInt();
+		teclado.nextLine();
+
+		Optional<Conta> conta = contaController.buscarNaCollection(numero);
+
+		if (conta.isPresent()) {
+			// confirmar exclusão
+			System.out.printf("\nTem certeza que você deseja excluir a conta numero %d? (S ou N)", numero);
+			String confirmacao = teclado.nextLine();
+
+			if (confirmacao.equalsIgnoreCase("s")) {
+				contaController.deletar(numero);
+			} else {
+				System.out.println("\nOperação cancelada!");
+			}
+		} else {
+			System.out.println("\nA conta não foi encontrada!");
+		}
+
+	}
+
+	public static void atualizarConta() {
+		System.out.println("Digite o número da conta: ");
+		int numero = teclado.nextInt();
+		teclado.nextLine();
+
+		Optional<Conta> conta = contaController.buscarNaCollection(numero);
+		
+		if (conta.isPresent()) {
+			
+			//Obtem os dados atualis da conta
+			int agencia = conta.get().getAgencia();
+			String titular = conta.get().getTitular();
+			float saldo = conta.get().getSaldo();
+			int tipo = conta.get().getTipo();
+			
+			//Atualiza a agencia ou mantem o valor atual
+			System.out.printf("\nAgência atual: %d\n"
+					+ "Digite o número da nova agência (Pressionae ENTER para manter o valor atual): \n", agencia);
+			String entrada = teclado.nextLine();
+			
+			agencia = entrada.isEmpty() ? agencia : Integer.parseInt(entrada);
+
+			//Atualiza o titular ou mantem o valor atual
+			System.out.printf("\nTitular atual: %s\n"
+					+ "Digite o nome do novo titular (Pressionae ENTER para manter o valor atual): \n", titular);
+			entrada = teclado.nextLine();
+			
+			titular = entrada.isEmpty() ? titular : entrada;
+			
+			//Atualiza o saldo ou mantem o valor atual
+			System.out.printf("\nSaldo atual: %.2f\n"
+					+ "Digite o novo saldo (Pressionae ENTER para manter o valor atual): \n", saldo);
+			entrada = teclado.nextLine();
+			
+			saldo = (int) (entrada.isEmpty() ? saldo : Float.parseFloat(entrada.replace(",", ".")));
+			
+			
+			switch (tipo) {
+			case 1 ->{
+				ContaCorrente contaCorrente = (ContaCorrente) conta.get();
+				float limite = contaCorrente.getLimite();
+				
+				//Atualiza o limite ou mantem o valor atual
+				System.out.printf("\nLimite atual: %.2f\n"
+						+ "Digite o novo Limite (Pressionae ENTER para manter o valor atual): \n", limite);
+				entrada = teclado.nextLine();
+				
+				limite = (int) (entrada.isEmpty() ? limite : Float.parseFloat(entrada.replace(",", ".")));
+				
+				contaController.atualizar(new ContaCorrente(numero, agencia, tipo, titular, saldo, limite));
+				}
+			
+			case 2 ->{
+				
+				ContaPoupanca contaPoupanca = (ContaPoupanca) conta.get();
+				int aniversario = contaPoupanca.getAniversario();
+				
+				//Atualiza o aniiversario ou mantem o valor atual
+				System.out.printf("\nDia do aniversário atual: %d\n"
+						+ "Digite o novo saldo (Pressionae ENTER para manter o valor atual): \n", aniversario);
+				entrada = teclado.nextLine();
+				
+				aniversario = (int) (entrada.isEmpty() ? aniversario : Integer.parseInt(entrada));
+				
+				contaController.atualizar(new ContaCorrente(numero, agencia, tipo, titular, saldo, aniversario));
+				}
+			
+			
+			}
+			
+			
+			
+		}else
+
+	{
+		System.out.printf("\nA conta número %d não encontrada!", numero);
+	}
+}
 
 }
