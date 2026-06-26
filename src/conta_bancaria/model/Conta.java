@@ -96,7 +96,7 @@ public abstract class Conta {
 			break;
 		}
 
-		System.out.println("*************************************");
+		System.out.println("\n*************************************");
 		System.out.println("            DADOS DA CONTA           ");
 		System.out.println("*************************************");
 
